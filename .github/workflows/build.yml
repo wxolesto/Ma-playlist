@@ -10,14 +10,14 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
 
-    - name: Install Capacitor & Assets Generator
+    - name: Install Capacitor & Dependencies
       run: |
         npm init -y
         npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/assets
@@ -28,13 +28,15 @@ jobs:
 
     - name: Generate App Icon
       run: |
-        npx capacitor-assets generate --iconSource icon.png
+        if [ -f "icon.png" ]; then
+          npx capacitor-assets generate --iconSource icon.png
+        fi
 
     - name: Sync Web Code to Android
       run: npx cap sync android
 
     - name: Setup Java JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
         java-version: '17'
@@ -46,7 +48,8 @@ jobs:
         ./gradlew assembleDebug
 
     - name: Upload APK Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Arsenous-Base-APK
         path: android/app/build/outputs/apk/debug/app-debug.apk
+ 
